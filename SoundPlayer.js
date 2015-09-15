@@ -1,23 +1,39 @@
-function SoundPlayer() {
-    SC.initialize({
+function SoundPlayer(SC, _) {
+    this.SC = SC;
+    this._ = _;
+
+    this.SC.initialize({
         client_id: 'd8c4984b4e6b9038bdf5f16703eed079'
     });
+
+    this.currentIndex = 0;
 }
 
 SoundPlayer.prototype.playNewTrack = function(callback) {
 
-    var self = this;
+    if (! this.tracks) {
+        this.SC.get('/tracks', { q: 'soothing', tags: 'instrumental', bpm: { to: 60 } }, function(tracks) {
+            this.tracks = this._.shuffle(tracks);
+            this.playTrack(callback);
+        }.bind(this));
+    } else {
+        this.playTrack(callback);
+    }
+};
 
-    SC.get('/tracks', { q: 'soothing', tags: 'instrumental', bpm: { to: 60 } }, function(tracks) {
-        self.track = tracks[getRandomInt(tracks.length)];
+SoundPlayer.prototype.getNextTrack = function() {
+    return this.tracks[this.currentIndex++ % this.tracks.length];
+};
 
-        SC.stream("/tracks/" + self.track.id, function(controls) {
-            self.setControls(controls);
-            self.play();
-        });
+SoundPlayer.prototype.playTrack = function(callback) {
+    this.track = this.getNextTrack();
 
-        callback(self.track);
-    });
+    callback(this.track);
+
+    this.SC.stream("/tracks/" + this.track.id, function(controls) {
+        this.setControls(controls);
+        this.play();
+    }.bind(this));
 };
 
 SoundPlayer.prototype.isPlaying = function() {
@@ -63,3 +79,8 @@ SoundPlayer.prototype.pause = function() {
         this.controls.pause();
     }
 };
+
+// Only export if not in browser
+if (typeof module === 'object') {
+    module.exports = SoundPlayer;
+}

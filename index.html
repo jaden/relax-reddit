@@ -17,7 +17,7 @@
 
         <h2 v-cloak v-show="quote" id="quote">{{ quote.title }}</h2>
 
-        <div id="controls">
+        <div v-cloak v-show="background" id="controls">
             <button v-on="click: togglePlaying">{{ playOrPauseText }} Music</button>
             <button v-if="musicPlaying" v-on="click: newTrack">New Track &gt;</button>
             <button v-on="click: toggleRefresh">{{ stopRefreshingText }} Refreshing</button>
@@ -25,12 +25,16 @@
 
         <div id="footer">
 
-            <div><a href="{{ quote.url }}">Quote</a> posted by {{ quote.author }}</div>
+            <div><a href="{{ quote.url }}">Quote</a> posted by
+                <a href="https://www.reddit.com/user/{{ quote.author }}">{{ quote.author }}</a></div>
 
-            <div><a href="{{ background.url }}">Image</a> posted by {{ background.author }}</div>
+            <div><a href="{{ background.url }}">Image</a> posted by
+                <a href="https://www.reddit.com/user/{{ background.author }}">{{ background.author }}</a></div>
 
             <div v-if="currentTrack">
-                <a href="{{ currentTrack.permalink_url }}">Music</a> by <a href="{{ currentTrack.user.permalink_url }}">{{ currentTrack.user.username }}</a>
+                <a href="{{ currentTrack.permalink_url }}">Music</a> by
+                <a href="{{ currentTrack.user.permalink_url }}">{{ currentTrack.user.username }}</a>
+                on SoundCloud.
             </div>
 
         </div>
@@ -38,8 +42,10 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.14/vue.min.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="//connect.soundcloud.com/sdk-2.0.0.js"></script>
+    <script src="https://connect.soundcloud.com/sdk-2.0.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="SoundPlayer.js"></script>
+    <script src="utils.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

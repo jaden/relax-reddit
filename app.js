@@ -1,16 +1,18 @@
 var BGS_COUNT    = 100,
     QUOTES_COUNT = 100;
 
-window.vue = new Vue({
+var vm = new Vue({
     el: '#container',
 
     data: {
         backgrounds: [],
+        backgroundIndex: 0,
         background: '',
         backgroundImage: '',
         cachedBackground: '',
         cachedBackgroundImage: '',
         quotes: [],
+        quoteIndex: 0,
         quote: '',
         musicPlaying: false,
         currentTrack: '',
@@ -30,9 +32,9 @@ window.vue = new Vue({
 
         loadBackgroundImages: function() {
 
-            $.getJSON("https://www.reddit.com/r/earthporn/top.json?sort=top&t=all&limit=" + BGS_COUNT, function(json) {
+            jQuery.getJSON("https://www.reddit.com/r/earthporn/top.json?sort=top&t=all&limit=" + BGS_COUNT, function(json) {
 
-                this.backgrounds = json.data.children;
+                this.backgrounds = _.shuffle(json.data.children);
                 this.chooseBackgroundImage();
 
             }.bind(this));
@@ -40,12 +42,12 @@ window.vue = new Vue({
 
         chooseBackgroundImage: function() {
 
-            this.cachedBackground      = this.getRandomBackground();
+            this.cachedBackground      = this.getNextBackground();
             this.cachedBackgroundImage = imageUrl(this.cachedBackground.url);
 
             // Handle first page load
             if (! this.background) {
-                this.background = this.getRandomBackground();
+                this.background = this.getNextBackground();
             } else {
                 this.background = this.cachedBackground;
             }
@@ -53,23 +55,23 @@ window.vue = new Vue({
             this.backgroundImage = this.getBackgroundImageUrl();
         },
 
-        getRandomBackground: function() {
-            return this.backgrounds[getRandomInt(BGS_COUNT)].data;
+        getNextBackground: function() {
+            return this.backgrounds[this.backgroundIndex++ % this.backgrounds.length].data;
         },
 
         getBackgroundImageUrl: function() {
-            var path = 'url('
-                + imageUrl(this.background.url)
-                + ')';
+            var path = 'url(' +
+                imageUrl(this.background.url) +
+                ')';
 
             return path;
         },
 
         loadQuotes: function() {
 
-            $.getJSON("https://www.reddit.com/r/quotes/top.json?sort=top&t=all&limit=" + QUOTES_COUNT, function(json) {
+            jQuery.getJSON("https://www.reddit.com/r/quotes/top.json?sort=top&t=all&limit=" + QUOTES_COUNT, function(json) {
 
-                this.quotes = json.data.children;
+                this.quotes = _.shuffle(json.data.children);
                 this.chooseQuote(false);
 
             }.bind(this));
@@ -78,21 +80,25 @@ window.vue = new Vue({
         chooseQuote: function(fade) {
 
             if (! fade) {
-                this.quote = this.quotes[getRandomInt(QUOTES_COUNT)].data;
+                this.quote = this.getNextQuote();
                 return;
             }
 
             // TODO Use v-transition instead of jQuery http://vuejs.org/guide/transitions.html#CSS_Transitions
-            $('#quote').fadeOut(2000, function() {
-                this.quote = this.quotes[getRandomInt(QUOTES_COUNT)].data;
-                $('#quote').fadeIn(2000);
+            jQuery('#quote').fadeOut(2000, function() {
+                this.quote = this.getNextQuote();
+                jQuery('#quote').fadeIn(2000);
             }.bind(this));
+        },
+
+        getNextQuote: function() {
+            return this.quotes[this.quoteIndex++ % this.quotes.length].data;
         },
 
         togglePlaying: function() {
 
             if (! this.soundPlayer) {
-                this.soundPlayer = new SoundPlayer();
+                this.soundPlayer = new SoundPlayer(SC, _);
             }
 
             if (this.soundPlayer.isPlaying())
@@ -138,49 +144,13 @@ window.vue = new Vue({
 
     computed: {
         playOrPauseText: function() {
-            return (this.musicPlaying)
-                ? 'Pause'
-                : 'Play';
+            return (this.musicPlaying) ?
+                'Pause' : 'Play';
         },
 
         stopRefreshingText: function() {
-            return (this.refresh)
-                ? 'Stop'
-                : 'Resume';
+            return (this.refresh) ?
+                'Stop' : 'Resume';
         }
     },
 });
-
-// Get an actual image url rather than link to imgur page
-function imageUrl(url) {
-    if (! url) {
-        return url;
-    }
-
-    var ext = getExtension(url);
-
-    if (ext === '') {
-        return url + '.jpg';
-    }
-
-    if (ext === 'gifv') {
-        return url + 'gif';
-    }
-
-    return url;
-}
-
-function getExtension(url) {
-    var lastPathSegment = url.substr(url.lastIndexOf('/') + 1);
-    var extension = lastPathSegment.substr(lastPathSegment.lastIndexOf('.') + 1);
-
-    if (lastPathSegment === extension) {
-        return '';
-    }
-
-    return extension;
-}
-
-function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-}

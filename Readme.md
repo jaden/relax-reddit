@@ -12,6 +12,10 @@ Credits for the quotes, images and music are in the bottom right corner.
 
 ## Development
 
-RelaxReddit is built with [Vue.js](http://vuejs.org/) and jQuery.
+RelaxReddit is built with [Vue.js](http://vuejs.org/), jQuery and Underscore.
 
-To use browser-sync to run a dev server, run `npm start`.
+To use browser-sync to run a dev server, run `npm run dev`.
+
+To run linter on Javascript files: `npm run lint`
+
+To run unit tests: `jasmine` OR `npm run tests`
