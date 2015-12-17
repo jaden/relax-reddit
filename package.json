@@ -2,6 +2,6 @@
     "scripts": {
         "dev": "browser-sync start --server --files=\"*.css, *.html, *.js\"",
         "lint": "jshint app.js SoundPlayer.js utils.js",
-        "tests": "jasmine"
+        "test": "jasmine"
     }
 }

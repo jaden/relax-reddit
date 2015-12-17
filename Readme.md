@@ -18,4 +18,4 @@ To use browser-sync to run a dev server, run `npm run dev`.
 
 To run linter on Javascript files: `npm run lint`
 
-To run unit tests: `jasmine` OR `npm run tests`
+To run unit tests: `jasmine` OR `npm test`
