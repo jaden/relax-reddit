@@ -32,6 +32,18 @@ function getExtension(url) {
     return extension;
 }
 
+function addHttps(url) {
+    if (! url) {
+        return url;
+    }
+
+    if (url.substr(0, 5) === 'http:') {
+        url = 'https:' + url.substr(5);
+    }
+
+    return url;
+}
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }

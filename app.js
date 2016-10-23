@@ -35,6 +35,11 @@ var vm = new Vue({
             jQuery.getJSON("https://www.reddit.com/r/earthporn/top.json?sort=top&t=all&limit=" + BGS_COUNT, function(json) {
 
                 this.backgrounds = _.shuffle(json.data.children);
+                this.backgrounds = this.backgrounds.map(function (background) {
+                    background.data.url = addHttps(background.data.url);
+                    return background;
+                });
+
                 this.chooseBackgroundImage();
 
             }.bind(this));
