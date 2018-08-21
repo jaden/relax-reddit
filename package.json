@@ -1,7 +1,7 @@
 {
-    "scripts": {
-        "dev": "browser-sync start --server --files=\"*.css, *.html, *.js\"",
-        "lint": "jshint app.js SoundPlayer.js utils.js",
-        "test": "jasmine"
-    }
+  "scripts": {
+    "dev": "browser-sync start --server --files=\"*.css, *.html, *.js\"",
+    "lint": "jshint app.js SoundPlayer.js utils.js",
+    "test": "jasmine"
+  }
 }
