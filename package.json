@@ -3,5 +3,10 @@
     "dev": "browser-sync start --server --files=\"*.css, *.html, *.js\"",
     "lint": "jshint app.js SoundPlayer.js utils.js",
     "test": "jasmine"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.27.7",
+    "jasmine": "^3.10.0",
+    "jshint": "^2.13.1"
   }
 }

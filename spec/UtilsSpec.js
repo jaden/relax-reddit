@@ -3,7 +3,7 @@ var utils = require('../utils');
 describe("imageUrl()", function() {
 
   it("should handle empty string", function() {
-    expect(utils.imageUrl('')).toEqual('');
+    expect(utils.imageUrl('')).toEqual(undefined);
   });
 
   it("should handle undefined", function() {
@@ -29,7 +29,7 @@ describe("imageUrl()", function() {
 describe("getExtension()", function() {
 
   it("should handle empty string", function() {
-    expect(utils.getExtension('')).toEqual('');
+    expect(utils.getExtension('')).toEqual(undefined);
   });
 
   it("should handle undefined", function() {
