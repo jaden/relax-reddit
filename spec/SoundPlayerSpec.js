@@ -16,7 +16,7 @@ _.shuffle = function(array) {
   return array;
 };
 
-var SoundPlayer = require('../SoundPlayer');
+var SoundPlayer = require('../public/SoundPlayer');
 
 describe("playNewTrack()", function() {
 

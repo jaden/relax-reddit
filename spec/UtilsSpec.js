@@ -1,4 +1,4 @@
-var utils = require('../utils');
+var utils = require('../public/utils');
 
 describe("imageUrl()", function() {
 
