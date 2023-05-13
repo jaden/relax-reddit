@@ -1,7 +1,3 @@
-body {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-}
 #container {
   width: 100%;
   height: 100%;
@@ -13,13 +9,8 @@ body {
   color: #fff;
   text-shadow: #000 0px 0px 20px;
   -webkit-font-smoothing: antialiased;
-  transition: background 2s linear;
-}
-
-#loading {
-  margin: 25px auto;
-  font-size: 3em;
-  text-align: center;
+  transition: background 4s ease-in;
+  animation: fadeIn 4s;
 }
 
 #controls {
@@ -39,10 +30,30 @@ body {
 }
 
 #quote {
-  margin: 100px auto;
+  margin: 25vh auto;
   padding: 0 10%;
   text-align: center;
   font-size: 3.3em;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+}
+
+.fade-in {
+  animation: fadeIn 5s;
+}
+
+.fade-out {
+  animation: fadeOut 5s;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 #footer {

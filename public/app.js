@@ -2,9 +2,10 @@ const BGS_COUNT = 100;
 const QUOTES_COUNT = 100;
 
 new Vue({
-  el: '#container',
+  el: '#app',
 
   data: {
+    isReady: false,
     backgrounds: [],
     backgroundIndex: 0,
     background: '',
@@ -14,32 +15,28 @@ new Vue({
     quotes: [],
     quoteIndex: 0,
     quote: '',
-    musicPlaying: false,
-    currentTrack: '',
-    soundPlayer: null,
     refresh: null,
     refreshInterval: 15000,
   },
 
-  created: function () {
-    this.loadBackgroundImages();
-    this.loadQuotes();
-    this.toggleRefresh();
+  mounted: async function () {
+    await this.loadBackgroundImages();
+    await this.loadQuotes();
+    await this.toggleRefresh();
+    this.isReady = true;
   },
 
   methods: {
-    loadBackgroundImages: function () {
+    loadBackgroundImages: async function () {
+      const response = await fetch(`https://www.reddit.com/r/earthporn/top.json?sort=top&t=all&limit=${BGS_COUNT}`);
+      const json = await response.json();
+      this.backgrounds = shuffleArray(json.data.children);
+      this.backgrounds = this.backgrounds.map(function (background) {
+        background.data.url = addHttps(background.data.url);
+        return background;
+      });
 
-      jQuery.getJSON("https://www.reddit.com/r/earthporn/top.json?sort=top&t=all&limit=" + BGS_COUNT, function (json) {
-        this.backgrounds = _.shuffle(json.data.children);
-        this.backgrounds = this.backgrounds.map(function (background) {
-          background.data.url = addHttps(background.data.url);
-          return background;
-        });
-
-        this.chooseBackgroundImage();
-
-      }.bind(this));
+      this.chooseBackgroundImage();
     },
 
     chooseBackgroundImage: function () {
@@ -64,44 +61,24 @@ new Vue({
       return `url(${imageUrl(this.background.url)})`;
     },
 
-    loadQuotes: function () {
-      jQuery.getJSON("https://www.reddit.com/r/quotes/top.json?sort=top&t=all&limit=" + QUOTES_COUNT, function (json) {
-        this.quotes = _.shuffle(json.data.children);
-        this.chooseQuote(false);
-
-      }.bind(this));
-    },
-
-    chooseQuote: function (fade) {
-      if (!fade) {
-        this.quote = this.getNextQuote();
-        return;
-      }
-
-      // TODO Use v-transition instead of jQuery http://vuejs.org/guide/transitions.html#CSS_Transitions
-      jQuery('#quote').fadeOut(2000, function () {
-        this.quote = this.getNextQuote();
-        jQuery('#quote').fadeIn(2000);
-      }.bind(this));
+    loadQuotes: async function () {
+      const response = await fetch(`https://www.reddit.com/r/quotes/top.json?sort=top&t=all&limit=${QUOTES_COUNT}`);
+      const json = await response.json();
+      this.quotes = shuffleArray(json.data.children);
+      this.quote = this.quotes[this.quoteIndex++ % this.quotes.length].data;
     },
 
     getNextQuote: function () {
-      return this.quotes[this.quoteIndex++ % this.quotes.length].data;
-    },
+      const element = document.querySelector('#quote');
 
-    togglePlaying: function () {
-      if (!this.soundPlayer) {
-        this.soundPlayer = new SoundPlayer(SC, _);
-      }
+      element.classList.remove('fade-in');
+      element.classList.add('fade-out');
 
-      if (this.soundPlayer.isPlaying()) {
-        this.soundPlayer.pause();
-        this.musicPlaying = false;
-      }
-      else {
-        this.soundPlayer.play(this.setTrack);
-        this.musicPlaying = true;
-      }
+      setTimeout(function () {
+        element.classList.add('fade-in');
+        this.quote = this.quotes[this.quoteIndex++ % this.quotes.length].data;
+        element.classList.remove('fade-out');
+      }.bind(this), 5000); // This time should match the animation time in CSS for fade-in and fade-out
     },
 
     toggleRefresh: function () {
@@ -113,31 +90,12 @@ new Vue({
 
       this.refresh = setInterval(function () {
         this.chooseBackgroundImage();
-        this.chooseQuote(true);
-
-        if (this.musicPlaying) {
-          this.soundPlayer.playNewTrackIfEnded(this.setTrack);
-        }
-
+        this.getNextQuote();
       }.bind(this), this.refreshInterval);
-    },
-
-    newTrack: function () {
-      this.musicPlaying = true;
-      this.soundPlayer.playNewTrack(this.setTrack);
-    },
-
-    // Callback for playNewTrack or play
-    setTrack: function (track) {
-      this.currentTrack = track;
     },
   },
 
   computed: {
-    playOrPauseText: function () {
-      return this.musicPlaying ? 'Pause' : 'Play';
-    },
-
     stopRefreshingText: function () {
       return this.refresh ? 'Stop' : 'Resume';
     }

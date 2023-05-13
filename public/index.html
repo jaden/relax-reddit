@@ -1,52 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Reddit Relax</title>
-    <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700italic' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Reddit Relax</title>
+  <link href='https://fonts.googleapis.com/css?family=Playfair+Display:700italic' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.14/vue.min.js"></script>
-    <script defer src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script defer src="https://connect.soundcloud.com/sdk-2.0.0.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script defer src="SoundPlayer.js"></script>
-    <script defer src="utils.js"></script>
-    <script defer src="app.js"></script>
+  <script defer src="vendor/vue-2.7.14.min.js"></script>
+  <script defer src="utils.js?v=1.1"></script>
+  <script defer src="app.js?v=1.1"></script>
 
-    <div id="container" v-style="background-image: backgroundImage">
+  <section id="app" v-cloak>
 
-        <div id="loading" v-show="! background">Loading...</div>
+    <div v-show="isReady" id="container" :style="{ 'background-image': backgroundImage }">
 
-        <img v-cloak class="bg" v-attr="src: cachedBackgroundImage" />
+      <img class="bg" :src="cachedBackgroundImage" />
 
-        <h2 v-cloak v-show="quote" id="quote">{{ quote.title }}</h2>
+      <h2 class="fade-in" id="quote">{{ quote.title }}</h2>
 
-        <div v-cloak v-show="background" id="controls">
-            <button v-on="click: togglePlaying">{{ playOrPauseText }} Music</button>
-            <button v-if="musicPlaying" v-on="click: newTrack">New Track &gt;</button>
-            <button v-on="click: toggleRefresh">{{ stopRefreshingText }} Refreshing</button>
-        </div>
+      <div id="controls">
+        <button @click="toggleRefresh">{{ stopRefreshingText }} Refreshing</button>
+      </div>
 
-        <div id="footer">
+      <div id="footer">
+        <div><a href="{{ quote.url }}">Quote</a> posted by
+          <a href="https://www.reddit.com/user/{{ quote.author }}">{{ quote.author }}</a></div>
 
-            <div><a href="{{ quote.url }}">Quote</a> posted by
-                <a href="https://www.reddit.com/user/{{ quote.author }}">{{ quote.author }}</a></div>
-
-            <div><a href="{{ background.url }}">Image</a> posted by
-                <a href="https://www.reddit.com/user/{{ background.author }}">{{ background.author }}</a></div>
-
-            <div v-if="currentTrack">
-                <a href="{{ currentTrack.permalink_url }}">Music</a> by
-                <a href="{{ currentTrack.user.permalink_url }}">{{ currentTrack.user.username }}</a>
-                on SoundCloud.
-            </div>
-
-        </div>
+        <div><a href="{{ background.url }}">Image</a> posted by
+          <a href="https://www.reddit.com/user/{{ background.author }}">{{ background.author }}</a></div>
+      </div>
     </div>
+
+  </section>
 
 </body>
 </html>

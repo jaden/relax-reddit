@@ -48,11 +48,22 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+  }
+
+  return array;
+}
+
 // Only export if not in browser
 if (typeof module === 'object') {
   module.exports = {
-    imageUrl: imageUrl,
-    getExtension: getExtension,
-    getRandomInt: getRandomInt
+    imageUrl,
+    getExtension,
+    getRandomInt,
+    addHttps,
+    shuffleArray,
   };
 }
