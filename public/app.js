@@ -1,28 +1,31 @@
 const BGS_COUNT = 100;
 const QUOTES_COUNT = 100;
 
-new Vue({
-  el: '#app',
-
-  data: {
-    isReady: false,
-    backgrounds: [],
-    backgroundIndex: 0,
-    background: '',
-    backgroundImage: '',
-    cachedBackground: '',
-    cachedBackgroundImage: '',
-    quotes: [],
-    quoteIndex: 0,
-    quote: '',
-    refresh: null,
-    refreshInterval: 15000,
+const app = Vue.createApp({
+  data() {
+    return {
+      isReady: false,
+      backgrounds: [],
+      backgroundIndex: 0,
+      background: '',
+      backgroundImage: '',
+      cachedBackground: '',
+      cachedBackgroundImage: '',
+      quotes: [],
+      quoteIndex: 0,
+      quote: '',
+      refresh: null,
+      refreshInterval: 15000,
+    };
   },
 
   mounted: async function () {
     await this.loadBackgroundImages();
     await this.loadQuotes();
     await this.toggleRefresh();
+
+    // Remove the loading div
+    document.querySelector('#loading').remove();
     this.isReady = true;
   },
 
@@ -101,3 +104,5 @@ new Vue({
     }
   },
 });
+
+app.mount('#app');

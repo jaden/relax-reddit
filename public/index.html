@@ -9,14 +9,18 @@
 </head>
 <body>
 
-  <script defer src="vendor/vue-2.7.14.min.js"></script>
+  <script defer src="assets/js/vue-3.3.2.global.prod.js"></script>
   <script defer src="utils.js?v=1.1"></script>
   <script defer src="app.js?v=1.1"></script>
+
+  <div id="loading">
+    <h2>Loading...</h2>
+    <img src="assets/img/three-dots.svg" />
+  </div>
 
   <section id="app" v-cloak>
 
     <div v-show="isReady" id="container" :style="{ 'background-image': backgroundImage }">
-
       <img class="bg" :src="cachedBackgroundImage" />
 
       <h2 class="fade-in" id="quote">{{ quote.title }}</h2>
