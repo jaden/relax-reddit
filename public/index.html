@@ -21,8 +21,6 @@
   <section id="app" v-cloak>
 
     <div v-show="isReady" id="container" :style="{ 'background-image': backgroundImage }">
-      <img class="bg" :src="cachedBackgroundImage" />
-
       <h2 class="fade-in" id="quote">{{ quote.title }}</h2>
 
       <div id="controls">

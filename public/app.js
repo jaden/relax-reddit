@@ -9,8 +9,6 @@ const app = Vue.createApp({
       backgroundIndex: 0,
       background: '',
       backgroundImage: '',
-      cachedBackground: '',
-      cachedBackgroundImage: '',
       quotes: [],
       quoteIndex: 0,
       quote: '',
@@ -43,25 +41,17 @@ const app = Vue.createApp({
     },
 
     chooseBackgroundImage: function () {
-      this.cachedBackground = this.getNextBackground();
-      this.cachedBackgroundImage = imageUrl(this.cachedBackground.url);
-
-      // Handle first page load
-      if (!this.background) {
-        this.background = this.getNextBackground();
-      } else {
-        this.background = this.cachedBackground;
-      }
-
-      this.backgroundImage = this.getBackgroundImageUrl();
+      this.background = this.getNextBackground();
+      this.backgroundImage = `url(${imageUrl(this.background.url)})`;
     },
 
     getNextBackground: function () {
-      return this.backgrounds[this.backgroundIndex++ % this.backgrounds.length].data;
-    },
+      const nextBackground = this.backgrounds[this.backgroundIndex++ % this.backgrounds.length].data;
 
-    getBackgroundImageUrl: function () {
-      return `url(${imageUrl(this.background.url)})`;
+      // Load next image so it's cached to avoid the flash of white when switching
+      new Image().src = imageUrl(this.backgrounds[this.backgroundIndex % this.backgrounds.length].data.url);
+
+      return nextBackground;
     },
 
     loadQuotes: async function () {
