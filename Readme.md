@@ -20,4 +20,4 @@ To run unit tests: `jasmine` OR `npm test`
 
 ## Dependencies
 
-* [Vue](https://github.com/vuejs/vue/releases)
+* [Vue](https://unpkg.com/vue@3/dist/vue.global.js)
