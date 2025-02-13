@@ -60,24 +60,15 @@ body {
   font-size: 3.3em;
   font-family: 'Playfair Display', serif;
   font-style: italic;
+  transition: opacity 5s ease-in-out;
 }
 
-.fade-in {
-  animation: fadeIn 5s;
+.hidden {
+  opacity: 0;
 }
 
-.fade-out {
-  animation: fadeOut 5s;
-}
-
-@keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+.visible {
+  opacity: 1;
 }
 
 #footer {

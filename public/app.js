@@ -64,14 +64,14 @@ const app = Vue.createApp({
     getNextQuote: function () {
       const element = document.querySelector('#quote');
 
-      element.classList.remove('fade-in');
-      element.classList.add('fade-out');
+      element.classList.remove('visible');
+      element.classList.add('hidden');
 
       setTimeout(function () {
-        element.classList.add('fade-in');
         this.quote = this.quotes[this.quoteIndex++ % this.quotes.length].data;
-        element.classList.remove('fade-out');
-      }.bind(this), 5000); // This time should match the animation time in CSS for fade-in and fade-out
+        element.classList.remove('hidden');
+        element.classList.add('visible');
+      }.bind(this), 5000); // This time should match the transition time in CSS for #quote
     },
 
     toggleRefresh: function () {
